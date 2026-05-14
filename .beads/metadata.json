@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "shannon_debug",
+  "project_id": "4f1b4266-20fb-4a7d-879b-e7f8414d2ebc"
+}

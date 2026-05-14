@@ -89,7 +89,7 @@ Observed:
 
 ## SDK Internals
 
-The installed `@anthropic-ai/claude-agent-sdk@0.2.140` `query()` implementation spawns the Claude Code executable and writes SDK user messages to the subprocess transport. It sets:
+The installed `@anthropic-ai/claude-agent-sdk@0.2.141` `query()` implementation spawns the Claude Code executable and writes SDK user messages to the subprocess transport. It sets:
 
 - `CLAUDE_AGENT_SDK_VERSION`
 - `CLAUDE_CODE_ENTRYPOINT=sdk-ts`

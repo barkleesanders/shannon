@@ -1,0 +1,2 @@
+{"id":"int-8ca55df4","kind":"field_change","created_at":"2026-05-14T09:17:00.128163Z","actor":"Barklees","issue_id":"shannon-debug-fng","extra":{"field":"status","new_value":"in_progress","old_value":"open"}}
+{"id":"int-f4e83afb","kind":"field_change","created_at":"2026-05-14T09:25:00.772791Z","actor":"Barklees","issue_id":"shannon-debug-fng","extra":{"field":"status","new_value":"closed","old_value":"in_progress","reason":"README fork note added, example local install stabilized, /ship checks passed, ready to push public fork."}}

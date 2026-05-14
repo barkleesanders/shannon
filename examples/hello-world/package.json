@@ -6,6 +6,6 @@
     "start": "bun run hello.ts"
   },
   "dependencies": {
-    "@dexh/shannon": "file:../.."
+    "@dexh/shannon": "link:../.."
   }
 }

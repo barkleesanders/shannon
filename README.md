@@ -2,6 +2,8 @@
 
 Shannon is a CLI and SDK wrapper around the interactive Claude Code CLI. It runs a real `claude` session inside tmux, sends a prompt, and emits stream JSON.
 
+Public fork: https://github.com/barkleesanders/shannon
+
 ```mermaid
 flowchart LR
     User([Your code / shell])

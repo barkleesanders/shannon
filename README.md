@@ -4,6 +4,20 @@ Shannon is a CLI and SDK wrapper around the interactive Claude Code CLI. It runs
 
 Public fork: https://github.com/barkleesanders/shannon
 
+## Fork notes
+
+This fork keeps Shannon's core behavior intact: drive a real interactive Claude Code session through tmux and emit CLI/SDK-friendly output.
+
+What was fixed and why:
+
+- Package metadata now consistently points at `@dexh/shannon`, `@dexh/shannon-agent-sdk`, and `dexhorthy/shannon`, so installs and repository links resolve to the actual project identity.
+- `shannon --help` now prints normal Commander help and exits successfully, so the CLI has a working smoke path before a prompt is executed.
+- CI installs `tmux`, runs the fake-Claude tmux regression, and supports manual dispatch, so the runtime path Shannon depends on is covered by automation.
+- `@anthropic-ai/claude-agent-sdk` is pinned and overridden at `0.2.141`, with Bun release-age exceptions for the Anthropic packages, so installs stay reproducible while the audit advisory is cleared.
+- The hello-world example uses `link:../..` for the local package, so example installs test the fork without recursively copying the repository into `node_modules`.
+
+These fixes matter because Shannon's reliability depends on matching the real local Claude/tmux runtime, not only package-level imports.
+
 ```mermaid
 flowchart LR
     User([Your code / shell])

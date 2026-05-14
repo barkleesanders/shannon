@@ -3,9 +3,9 @@
   "version": "0.0.2",
   "description": "CLI and SDK wrapper that drives interactive Claude Code through tmux and emits stream-json.",
   "license": "MIT",
-  "homepage": "https://github.com/humanlayer/shannon#readme",
+  "homepage": "https://github.com/dexhorthy/shannon#readme",
   "bugs": {
-    "url": "https://github.com/humanlayer/shannon/issues"
+    "url": "https://github.com/dexhorthy/shannon/issues"
   },
   "keywords": [
     "claude",
@@ -40,7 +40,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/humanlayer/shannon.git"
+    "url": "git+https://github.com/dexhorthy/shannon.git"
   },
   "publishConfig": {
     "access": "public"
@@ -53,8 +53,11 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "0.2.140",
+    "@anthropic-ai/claude-agent-sdk": "0.2.141",
     "commander": "14.0.3",
     "zod": "4.4.3"
+  },
+  "overrides": {
+    "@anthropic-ai/claude-agent-sdk": "0.2.141"
   }
 }

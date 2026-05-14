@@ -25,11 +25,11 @@ jobs:
       - run: bun test
       - run: bun run typecheck
       - run: bun run pack:check
-      - name: Publish @humanlayer/shannon
+      - name: Publish @dexh/shannon
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish @humanlayer/shannon-agent-sdk
+      - name: Publish @dexh/shannon-agent-sdk
         run: npm publish --access public --provenance
         working-directory: packages/shannon-agent-sdk
         env:

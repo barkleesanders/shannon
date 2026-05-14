@@ -61,9 +61,9 @@ Shannon host.
 | Surface login/setup errors | prompt/transcript timeouts include `tmux capture-pane` output. | Partial |
 | Cleanup on interruption | SIGINT/SIGTERM handlers share the tmux cleanup path and use conventional exit codes. | Implemented |
 | Use Commander | `parseArgs()` uses `commander`. | Implemented |
-| Publish package | Current package metadata is `@dexh/shannon`; npm reports `@dexh/shannon@0.0.2`. Original spec named `@humanlayer/shannon`, so namespace parity depends on the chosen package target. | Partial |
-| Publish agent SDK facade | Current package metadata is `@dexh/shannon-agent-sdk`; npm reports `@dexh/shannon-agent-sdk@0.0.1`. Full Agent SDK parity is still incomplete. | Partial |
-| Push public GitHub repo | `git push origin main` succeeded on `git@github.com:dexhorthy/shannon.git`. Original spec named `humanlayer/shannon`, so repo namespace parity depends on the chosen target. | Partial |
+| Publish package | Package metadata is consistently `@dexh/shannon`; npm reports `@dexh/shannon@0.0.2`. | Implemented |
+| Publish agent SDK facade | Package metadata is consistently `@dexh/shannon-agent-sdk`; npm reports `@dexh/shannon-agent-sdk@0.0.1`. Full Agent SDK parity is still incomplete. | Partial |
+| Push public GitHub repo | `git push origin main` succeeded on `git@github.com:dexhorthy/shannon.git`; package links point to `dexhorthy/shannon`. | Implemented |
 | SDK `query()` | `src/sdk.ts` exports async iterable `query()`, JSONL parser, and option mapping for all currently forwarded Shannon CLI flags. | Partial |
 | Full zod schemas | Zod schemas are exported for the current Shannon SDK messages/options/query params; full Claude Agent SDK schema parity is not complete. | Partial |
 | Bidirectional SDK bridge | `spec-01.md` now defines generated `--settings` injection for bridge MCP servers/hooks plus oRPC over a Unix socket; implementation is not started. | Planned |
@@ -291,10 +291,8 @@ Shannon host.
 - Publishing the current source package revisions is blocked on npm 2FA; an
   attempted publish of `@dexh/shannon@0.0.3` returned `EOTP` and requires an
   OTP before version bumps can be committed safely.
-- Original spec names `@humanlayer/*` npm packages and `humanlayer/shannon` as
-  the public repo. Current committed package metadata and pushed remote use
-  `@dexh/*` and `dexhorthy/shannon`; if the original namespace is still required,
-  those publish/push targets remain incomplete.
+- Package, workflow, README, and spec references now use one namespace:
+  `@dexh/*` packages and `dexhorthy/shannon`.
 
 ## Next Steps
 

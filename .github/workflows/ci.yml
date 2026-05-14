@@ -12,9 +12,11 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - run: if ! which tmux; then sudo apt-get update && sudo apt-get install -y tmux; fi
       - run: bun install --frozen-lockfile
       - run: bun add -g @anthropic-ai/claude-code
       - run: bun test
+      - run: SHANNON_FAKE_TMUX=1 bun test src/test/learning/shannon-transcript.test.ts
       - run: bun run typecheck
       - run: bun pm pack --dry-run
       - run: cd packages/shannon-agent-sdk && bun pm pack --dry-run

@@ -17,7 +17,7 @@ outputs
 sdk version:
 
 ```
-import { query } from "@humanlayer/shannon"
+import { query } from "@dexh/shannon"
 
 for await (const message of query({
   prompt: "hi i'm tom",
@@ -63,8 +63,8 @@ how does data get writte to disk when launching interactive (claude w/o -p) sess
 1. validating claude and tmux are installed
 2. handling errors from claude like "needs login" or "first time use, walkthing you through setup steps - can probably use capture-pane or more cleanly, check the internal claude config surface like ~/.claude.json or ~/.claude/ directory full of metatdata
 3. use commander for CLI flags and command tree parsing
-4. publish to npm under @humanlayer/shannon and @humanlayer/shannon-agent-sdk
-5. push to github public repo humanlayer/shannon
+4. publish to npm under @dexh/shannon and @dexh/shannon-agent-sdk
+5. push to github public repo dexhorthy/shannon
 6. shannon agent-sdk support with full zod schemas etc
 7. support for every claude -p and claude-agent-sdk feature - via an extensive and growing set of conformance tests that can be run (use haiku model to save $$ please)
 

@@ -1,6 +1,6 @@
 # @dexh/shannon-agent-sdk
 
-Claude Agent SDK-compatible facade for [Shannon](https://github.com/humanlayer/shannon). It
+Claude Agent SDK-compatible facade for [Shannon](https://github.com/dexhorthy/shannon). It
 re-exports Shannon's implemented SDK surface from [`@dexh/shannon`](https://www.npmjs.com/package/@dexh/shannon).
 Full Claude Agent SDK parity is a work in progress (see the repo's
 `GOAL_PROGRESS.md`).

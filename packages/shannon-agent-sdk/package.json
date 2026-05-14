@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "Claude Agent SDK-compatible facade for Shannon.",
   "license": "MIT",
-  "homepage": "https://github.com/humanlayer/shannon/tree/main/packages/shannon-agent-sdk#readme",
+  "homepage": "https://github.com/dexhorthy/shannon/tree/main/packages/shannon-agent-sdk#readme",
   "bugs": {
-    "url": "https://github.com/humanlayer/shannon/issues"
+    "url": "https://github.com/dexhorthy/shannon/issues"
   },
   "keywords": [
     "claude",
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/humanlayer/shannon.git",
+    "url": "git+https://github.com/dexhorthy/shannon.git",
     "directory": "packages/shannon-agent-sdk"
   },
   "publishConfig": {

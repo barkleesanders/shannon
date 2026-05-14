@@ -196,13 +196,13 @@ export function parseArgs(argv: string[], cwd = process.cwd()): CliOptions {
     .option("--tmux [mode]", "create a tmux session for the worktree")
     .option("-w, --worktree [name]", "create a new git worktree for this session")
     .configureOutput({
-      writeOut: () => undefined,
       writeErr: () => undefined,
     });
 
   try {
     program.parse(argv, { from: "user" });
   } catch (error) {
+    if (isCommanderHelpDisplayed(error)) throw error;
     throw new Error(error instanceof Error ? error.message : String(error));
   }
 
@@ -725,6 +725,15 @@ async function main() {
   await runShannon(options);
 }
 
+function isCommanderHelpDisplayed(error: unknown) {
+  return (
+    error !== null
+    && typeof error === "object"
+    && "code" in error
+    && error.code === "commander.helpDisplayed"
+  );
+}
+
 export async function runShannon(options: CliOptions) {
   const runtime = await validateRuntime(options.pathToClaudeCodeExecutable);
 
@@ -1190,6 +1199,9 @@ function usage() {
 
 if (import.meta.main) {
   main().catch((error) => {
+    if (isCommanderHelpDisplayed(error)) {
+      process.exit(0);
+    }
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exit(1);
   });

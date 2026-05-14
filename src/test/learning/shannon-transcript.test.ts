@@ -9,6 +9,9 @@
  *   Claude SDK event; it uses `type: "shannon_session"`.
  */
 import { expect, test } from "bun:test";
+import { chmod, mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   DEFAULT_CLAUDE_TOOLS,
   assistantReplyFromRows,
@@ -39,6 +42,32 @@ import {
   validateRuntime,
 } from "../../../index";
 
+const runFakeTmux = Bun.env.SHANNON_FAKE_TMUX === "1" ? test : test.skip;
+
+async function runLocalCli(args: string[], env: Record<string, string | undefined> = {}) {
+  const proc = Bun.spawn(["bun", "./index.ts", ...args], {
+    cwd: process.cwd(),
+    env: { ...Bun.env, ...env },
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+
+  const [stdout, stderr, exitCode] = await Promise.all([
+    new Response(proc.stdout).text(),
+    new Response(proc.stderr).text(),
+    proc.exited,
+  ]);
+
+  return { stdout, stderr, exitCode };
+}
+
+function parseJsonl(stdout: string): Array<Record<string, unknown>> {
+  return stdout
+    .split("\n")
+    .filter((line) => line.trim().length > 0)
+    .map((line) => JSON.parse(line) as Record<string, unknown>);
+}
+
 test("parses the target CLI invocation shape", () => {
   expect(
     parseArgs(
@@ -56,6 +85,15 @@ test("parses the target CLI invocation shape", () => {
     pathToClaudeCodeExecutable: undefined,
     claudeArgs: [],
   });
+});
+
+test("prints CLI help and exits successfully", async () => {
+  const { stdout, stderr, exitCode } = await runLocalCli(["--help"]);
+
+  expect(exitCode, stderr).toBe(0);
+  expect(stderr).toBe("");
+  expect(stdout).toContain("Usage: shannon");
+  expect(stdout).toContain("--output-format");
 });
 
 test("parses positional prompt and forwards common Claude flags", () => {
@@ -597,4 +635,70 @@ test("emits a final Shannon metadata row with session location and cleanup statu
     tmux_session: "shannon-test",
     cleanup: { tmux_killed: true, exit_code: 0 },
   });
+});
+
+runFakeTmux("runs the CLI through tmux with a fake Claude transcript", async () => {
+  const home = await mkdtemp(join(tmpdir(), "shannon-fake-home-"));
+  const fakeClaude = join(home, "fake-claude");
+  const prompt = "fake tmux prompt";
+
+  const fakeClaudeSource = [
+    "#!/usr/bin/env bun",
+    "import { randomUUID } from \"node:crypto\";",
+    "import { mkdir } from \"node:fs/promises\";",
+    "import { join, resolve } from \"node:path\";",
+    "function projectKeyForCwd(cwd) { return resolve(cwd).normalize(\"NFC\").replace(/[^a-zA-Z0-9._-]/g, \"-\"); }",
+    "const args = Bun.argv.slice(2);",
+    "let sessionId = \"\";",
+    "for (let i = 0; i < args.length; i += 1) {",
+    "  if (args[i] === \"--session-id\") sessionId = args[i + 1] ?? \"\";",
+    "}",
+    "if (!sessionId) sessionId = `fake-${randomUUID()}`;",
+    "const prompt = args.at(-1) ?? \"\";",
+    "const cwd = process.cwd();",
+    "const projectFolder = join(Bun.env.HOME ?? \"\", \".claude\", \"projects\", projectKeyForCwd(cwd));",
+    "await mkdir(projectFolder, { recursive: true });",
+    "const transcriptPath = join(projectFolder, `${sessionId}.jsonl`);",
+    "const timestamp = new Date().toISOString();",
+    "const rows = [",
+    "  { type: \"user\", timestamp, cwd, sessionId, message: { role: \"user\", content: prompt } },",
+    "  { type: \"assistant\", timestamp, cwd, sessionId, message: { role: \"assistant\", model: \"fake-haiku\", content: [{ type: \"text\", text: \"fake tmux response\" }], usage: { input_tokens: 1, output_tokens: 2 }, stop_reason: \"end_turn\" } },",
+    "  { type: \"system\", subtype: \"turn_duration\", durationMs: 12 },",
+    "];",
+    "await Bun.write(transcriptPath, `${rows.map((row) => JSON.stringify(row)).join(\"\\n\")}\\n`);",
+    "await new Promise(() => {});",
+  ].join("\n");
+
+  try {
+    await Bun.write(fakeClaude, fakeClaudeSource);
+    await chmod(fakeClaude, 0o755);
+
+    const { stdout, stderr, exitCode } = await runLocalCli([
+      "-p",
+      prompt,
+      "--path-to-claude-code-executable",
+      fakeClaude,
+      "--output-format=stream-json",
+      "--verbose",
+    ], { HOME: home });
+
+    expect(exitCode, stderr).toBe(0);
+    const messages = parseJsonl(stdout);
+    expect(messages.map((message) => message.type)).toEqual([
+      "system",
+      "assistant",
+      "result",
+      "shannon_session",
+    ]);
+    expect(messages.find((message) => message.type === "result")).toMatchObject({
+      result: "fake tmux response",
+      duration_ms: 12,
+    });
+    expect(messages.at(-1)).toMatchObject({
+      type: "shannon_session",
+      cleanup: { tmux_killed: true },
+    });
+  } finally {
+    await rm(home, { recursive: true, force: true });
+  }
 });

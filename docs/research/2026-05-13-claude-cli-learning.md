@@ -157,7 +157,7 @@ shannon -p "hi" --output-format=stream-json --verbose
 The first SDK-facing API mirrors Claude Agent SDK's async-iterable shape:
 
 ```ts
-import { query } from "@humanlayer/shannon";
+import { query } from "@dexh/shannon";
 
 for await (const message of query({
   prompt: "hi",
